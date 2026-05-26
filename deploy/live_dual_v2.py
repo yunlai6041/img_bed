@@ -234,7 +234,7 @@ async def speak(text):
 # ============== 7.5 情绪 BGM 播放（按 music_tag 抽本地音乐）==============
 def play_bgm(music_tag, play_music_flag):
     """按工作流返回的 music_tag 从本地音乐库抽 1 首播放
-    限频：60 秒内最多放 1 次，避免刷屏盖住解说
+    限频：120 秒内最多放 1 次，避免刷屏盖住解说（V1.2.6.1：60→120，王者一个团战 90-120s）
     互锁：播放后写 BGM_LOCK_UNTIL = mp3 真实时长，期间主循环不抢声道
     """
     global LAST_BGM_TIME, BGM_LOCK_UNTIL
@@ -243,9 +243,9 @@ def play_bgm(music_tag, play_music_flag):
     folder_name = MUSIC_LIB.get(music_tag)
     if folder_name is None:
         return
-    # 60 秒限频
-    if time.time() - LAST_BGM_TIME < 60:
-        print(f"  ⏸ BGM 限频中（60秒内已放过），跳过 {music_tag}")
+    # 120 秒限频（V1.2.6.1 实战调整：60→120）
+    if time.time() - LAST_BGM_TIME < 120:
+        print(f"  ⏸ BGM 限频中（120秒内已放过），跳过 {music_tag}")
         return
     folder = os.path.join(MUSIC_DIR, folder_name)
     if not os.path.isdir(folder):
